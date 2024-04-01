@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:pcic_mobile_app/screens/dashboard/controllers/_control_task.dart';
+import 'package:pcic_mobile_app/screens/dashboard/views/_pcic_form_1.dart';
 // import 'package:pcic_mobile_app/screens/dashboard/views/_pcic_form_1.dart';
 import 'package:pcic_mobile_app/utils/_app_env.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -159,6 +160,25 @@ class _GeotagPageState extends State<GeotagPage> {
                         ),
                       ],
                     ),
+
+                    ButtonBar(
+                      alignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // Navigate to the PCICFormPage
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PCICFormPage(),
+                              ),
+                            );
+                          },
+                          child: const Text('Navigate to form'),
+                        ),
+
+                      ]
+                    )
                   ],
                 ),
               ),
