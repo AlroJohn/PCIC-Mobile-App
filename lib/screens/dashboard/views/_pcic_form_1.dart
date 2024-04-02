@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:pcic_mobile_app/screens/dashboard/controllers/_control_task.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const TaskFormPage());
@@ -17,7 +18,6 @@ class TaskFormPage extends StatelessWidget {
     );
   }
 }
-
 class PCICFormPage extends StatefulWidget {
   final int? taskId;
 
@@ -25,6 +25,21 @@ class PCICFormPage extends StatefulWidget {
 
   @override
   _PCICFormPageState createState() => _PCICFormPageState();
+}
+
+class CapitalizeInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.splitMapJoin(
+        RegExp(r'\b\w'),
+        onMatch: (m) => m.group(0)!.toUpperCase(),
+        onNonMatch: (n) => n,
+      ),
+      selection: newValue.selection,
+    );
+  }
 }
 
 class _PCICFormPageState extends State<PCICFormPage> {
@@ -51,6 +66,12 @@ class _PCICFormPageState extends State<PCICFormPage> {
   final TextEditingController _cicNumberTypeController =
       TextEditingController();
   final TextEditingController _locationTypeController = TextEditingController();
+  
+  final TextEditingController _locationWestController = TextEditingController();
+  final TextEditingController _locationEastController = TextEditingController();
+  final TextEditingController _locationNorthController = TextEditingController();
+  final TextEditingController _locationSouthController = TextEditingController();
+  final TextEditingController _remarksController = TextEditingController();
   // final TextEditingController _farmerTypeController = TextEditingController();
   // final TextEditingController _emailController = TextEditingController();
 
@@ -84,10 +105,11 @@ class _PCICFormPageState extends State<PCICFormPage> {
                         padding: const EdgeInsets.only(right: 10.0),
                         child: TextFormField(
                           controller: _farmerFirstNameController,
+                          inputFormatters: [CapitalizeInputFormatter()],
                           decoration: const InputDecoration(
                             labelText: 'First Name',
                             border: UnderlineInputBorder(),
-                            labelStyle: TextStyle(fontSize: 12),
+                            labelStyle: TextStyle(fontSize: 14),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -103,10 +125,11 @@ class _PCICFormPageState extends State<PCICFormPage> {
                         padding: const EdgeInsets.only(right: 10.0),
                         child: TextFormField(
                           controller: _farmerLastNameController,
+                          inputFormatters: [CapitalizeInputFormatter()],
                           decoration: const InputDecoration(
                             labelText: 'Last Name',
                             border: UnderlineInputBorder(),
-                            labelStyle: TextStyle(fontSize: 12),
+                            labelStyle: TextStyle(fontSize: 14),
                           ),
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -119,23 +142,34 @@ class _PCICFormPageState extends State<PCICFormPage> {
                     ),
                     Expanded(
                       child: SizedBox(
-                        child: TextFormField(
-                          controller: _farmerMiddleInitialController,
-                          decoration: const InputDecoration(
-                            labelText: 'Middle Initial',
-                            labelStyle: TextStyle(fontSize: 12),
-                            border: UnderlineInputBorder(),
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          child: TextFormField(
+                            controller: _farmerMiddleInitialController,
+                            maxLength: 1,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z]')),
+                              UpperCaseTextFormatter(),
+                            ],
+                            decoration: const InputDecoration(
+                              labelText: 'Middle Initial',
+                              labelStyle: TextStyle(fontSize: 14),
+                              border: UnderlineInputBorder(),
+                              counter: SizedBox.shrink(),
+                            ),
                           ),
                         ),
                       ),
                     ),
+
                   ],
                 ),
 
                 TextFormField(
                   controller: _farmerAddressController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration: const InputDecoration(labelText: 'Address',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -146,9 +180,10 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _farmerTypeController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration:
                   const InputDecoration(labelText: 'Type of Farmer',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -160,7 +195,7 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 TextFormField(
                   controller: _farmerMobileNumberController,
                   decoration: const InputDecoration(labelText: 'Mobile No.',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -171,8 +206,9 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _farmerGroupNameController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration: const InputDecoration(labelText: 'Group Name',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -183,8 +219,9 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _farmerGroupAddressController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration: const InputDecoration(labelText: 'Group Address',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -195,8 +232,9 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _lenderNameController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration: const InputDecoration(labelText: 'Lender Name',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -207,9 +245,10 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _lenderAddressController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration:
                       const InputDecoration(labelText: 'Lender Address',
-                      labelStyle: TextStyle(fontSize: 12),
+                      labelStyle: TextStyle(fontSize: 14),
                       ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -221,7 +260,7 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 TextFormField(
                   controller: _cicNumberTypeController,
                   decoration: const InputDecoration(labelText: 'CIC No.',
-                  labelStyle: TextStyle(fontSize: 12),
+                  labelStyle: TextStyle(fontSize: 14),
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -232,9 +271,10 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 ),
                 TextFormField(
                   controller: _locationTypeController,
+                  inputFormatters: [CapitalizeInputFormatter()],
                   decoration:
                       const InputDecoration(labelText: 'Location of Farm',
-                      labelStyle: TextStyle(fontSize: 12),
+                      labelStyle: TextStyle(fontSize: 14),
                       ),
                   validator: (value) {
                     if (value!.isEmpty) {
@@ -247,7 +287,7 @@ class _PCICFormPageState extends State<PCICFormPage> {
                 const Text(
                   'Location of Sketch Plan:',
                   style: TextStyle(
-                    fontSize: 12, // Example font size
+                    fontSize: 14, // Example font size
                     color: Color.fromARGB(255, 31, 31, 31), // Example color
                   ),
                 ),
@@ -262,11 +302,13 @@ class _PCICFormPageState extends State<PCICFormPage> {
                           child: Padding(
                             padding: const EdgeInsets.all(10),
                             child: TextFormField(
+                              inputFormatters: [UpperCaseTextFormatter()],
+                              controller: _locationNorthController,
                               decoration: const InputDecoration(
                                 labelText: 'North',
-                                labelStyle: TextStyle(fontSize: 12),
+                                labelStyle: TextStyle(fontSize: 14),
                                 border: UnderlineInputBorder(),
-                              ),
+                              ), 
                             ),
                           ),
                         ),
@@ -276,9 +318,11 @@ class _PCICFormPageState extends State<PCICFormPage> {
                             child: TextFormField(
                               decoration: const InputDecoration(
                                 labelText: 'East',
-                                labelStyle: TextStyle(fontSize: 12),
+                                labelStyle: TextStyle(fontSize: 14),
                                 border: UnderlineInputBorder(),
                               ),
+                              inputFormatters: [UpperCaseTextFormatter()],
+                              controller: _locationEastController,
                             ),
                           ),
                         ),
@@ -293,9 +337,11 @@ class _PCICFormPageState extends State<PCICFormPage> {
                             child: TextFormField(
                               decoration: const InputDecoration(
                                 labelText: 'South',
-                                labelStyle: TextStyle(fontSize: 12),
+                                labelStyle: TextStyle(fontSize: 14),
                                 border: UnderlineInputBorder(),
                               ),
+                              inputFormatters: [UpperCaseTextFormatter()],
+                              controller: _locationSouthController,
                             ),
                           ),
                         ),
@@ -305,13 +351,36 @@ class _PCICFormPageState extends State<PCICFormPage> {
                             child: TextFormField(
                               decoration: const InputDecoration(
                                 labelText: 'West',
-                                labelStyle: TextStyle(fontSize: 12),
+                                labelStyle: TextStyle(fontSize: 14),
                                 border: UnderlineInputBorder(),
                               ),
+                              inputFormatters: [UpperCaseTextFormatter()],
+                              controller: _locationWestController,
                             ),
                           ),
                         ),
                       ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  const Text(
+                      'Remarks',
+
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    TextFormField(
+                      maxLines: 3,
+                      controller: _remarksController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your remarks...',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ],
                 ),
@@ -332,24 +401,30 @@ class _PCICFormPageState extends State<PCICFormPage> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     if (_formKey.currentState!.validate()) {
-                //       print('Farmer Name: ${_farmerNameController.text}');
-                //       print('Farmer Address: ${_farmerAddressController.text}');
-                //       print('Farmer Type: ${_farmerTypeController.text}');
-                //       print('Farmer Mobile Number: ${_farmerMobileNumberController.text}');
-                //       print('Farmer Group Name: ${_farmerGroupNameController.text}');
-                //       print('Farmer Group Address: ${_farmerGroupAddressController.text}');
-                //       print('Lender Name: ${_lenderNameController.text}');
-                //       print('Lender Address: ${_lenderAddressController.text}');
-                //       print('CIC Number Type: ${_cicNumberTypeController.text}');
-                //       print('Location Type: ${_locationTypeController.text}');
-
-                //     }
-                //   },
-                //   child: const Text('Submit'),
-                // ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      print('Farmer Name: ${_farmerFirstNameController.text}');
+                      print('Farmer Last Name: ${_farmerLastNameController.text}');
+                      print('Farmer Middle Initial: ${_farmerMiddleInitialController.text}');
+                      print('Farmer Address: ${_farmerAddressController.text}');
+                      print('Farmer Type: ${_farmerTypeController.text}');
+                      print('Farmer Mobile Number: ${_farmerMobileNumberController.text}');
+                      print('Farmer Group Name: ${_farmerGroupNameController.text}');
+                      print('Farmer Group Address: ${_farmerGroupAddressController.text}');
+                      print('Lender Name: ${_lenderNameController.text}');
+                      print('Lender Address: ${_lenderAddressController.text}');
+                      print('CIC Number Type: ${_cicNumberTypeController.text}');
+                      print('Location Type: ${_locationTypeController.text}');
+                      print('Location North: ${_locationNorthController.text}');
+                      print('Location East: ${_locationEastController.text}');
+                      print('Location South: ${_locationSouthController.text}');
+                      print('Location West: ${_locationWestController.text}');
+                      print('Remarks: ${_remarksController.text}');
+                    }
+                  },
+                  child: const Text('Submit'),
+                ),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -433,6 +508,24 @@ class _PCICFormPageState extends State<PCICFormPage> {
     _lenderAddressController.dispose();
     _cicNumberTypeController.dispose();
     _locationTypeController.dispose();
+    _locationNorthController.dispose();
+    _locationEastController.dispose();
+    _locationSouthController.dispose();
+    _locationWestController.dispose();
+    _remarksController.dispose();
+    
     super.dispose();
   }
 }
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
+  }
+}
+
